@@ -34,7 +34,6 @@ class CryptoXRates {
       axios.get(`${this.apiUrl}/ticker${this._limit ? `/?limit=${this._limit}` : ''}`)
       .then(function (response) {
         if (response && response.data) {
-          console.log('called!!!')
           const data = response.data.data || response.data;
           const newArray = [];
           for (var k in data) {

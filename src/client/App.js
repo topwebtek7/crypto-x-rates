@@ -4,14 +4,18 @@ import './app.css';
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: null };
+    this.state = { 
+      data: null,
+      loading: false
+    };
     this.tick = this.tick.bind(this)
   }
 
   tick() {
+    this.setState({ loading: true })
     fetch('/api/cryptoData')
       .then(res => res.json())
-      .then(data => this.setState({ data: data }))
+      .then(data => this.setState({ data: data, loading: false }))
   }
 
   componentDidMount(){
@@ -35,17 +39,16 @@ export default class App extends Component {
 
     return (
       <div className='crypto-table-container'>
-        {this.state.data ? (
+        <h1>Cryptocurrency Exchange Rates</h1>
+        {!this.state.data || this.state.loading ? <h1>Loading.. please wait!</h1> : (
         <table className='crypto-table' width='100%'>
           {tableHeaders}
           <tbody>
             {this.state.data.map(e => (
-              <tr><td>{e['name']}</td><td>{e['symbol']}</td><td>{e['usd']['price']}</td><td>{e['last_updated']}</td></tr>
+              <tr><td>{e['name']}</td><td>{e['symbol']}</td><td>${e['usd']['price']}</td><td>{e['last_updated']}</td></tr>
             ))}
           </tbody>
         </table>
-        ) : (
-          <h1>Loading.. please wait!</h1>
         )}
       </div>
     );
